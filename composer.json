@@ -1,13 +1,12 @@
 {
-    "name": "sylius/plugin-skeleton",
-    "type": "sylius-plugin",
-    "keywords": ["sylius", "sylius-plugin"],
-    "description": "Acme example plugin for Sylius.",
+    "name": "digital-holding/artis-simple-product-variant-overwrite-hotfix-plugin",
+    "type": "artis-plugin",
+    "keywords": ["artis", "artis-plugin", "sylius", "sylius-plugin"],
+    "description": "Plugin which solves the problem of saving simple products which causes clearing of fields not present in the view.",
     "license": "MIT",
     "require": {
         "php": "^7.3",
-
-        "sylius/sylius": "^1.8"
+        "sylius/sylius": "^1.6"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
@@ -41,30 +40,15 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/",
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "DH\\ArtisSimpleProductVariantOverwriteHotfixPlugin\\": "src/"
         }
-    },
-    "autoload-dev": {
-        "classmap": ["tests/Application/Kernel.php"]
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.8-dev"
+            "dev-master": "1.0-dev"
         }
     },
     "config": {
         "sort-packages": true
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "php bin/create_node_symlink.php"
-        ],
-        "post-update-cmd": [
-            "php bin/create_node_symlink.php"
-        ],
-        "post-create-project-cmd": [
-            "php bin/create_node_symlink.php"
-        ]
     }
 }
