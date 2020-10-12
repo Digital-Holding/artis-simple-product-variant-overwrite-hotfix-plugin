@@ -14,12 +14,12 @@ stops any processing of the values.
 First, install using composer:
 
 ```bash
-digital-holding/artis-simple-product-variant-overwrite-hotfix-plugin
+composer require digital-holding/artis-simple-product-variant-overwrite-hotfix-plugin
 ```
 
 Then, add entry to your `config/bundles.php`:
 ```php
-    DH\ArtisSimpleProductVariantOverwriteHotfixPlugin\DHArtisSimpleProductVariantOverwriteHotfixPlugin::class => ['all' => true]
+DH\ArtisSimpleProductVariantOverwriteHotfixPlugin\DHArtisSimpleProductVariantOverwriteHotfixPlugin::class => ['all' => true]
 ```
 
 (this part may be done for you by `Symfony/Flex` already)
