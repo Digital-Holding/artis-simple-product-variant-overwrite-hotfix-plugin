@@ -22,7 +22,7 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
         $variantForm = $event->getForm()->get('variant');
         $variantData = $data['variant'];
         foreach ($variantForm->all() as $fieldName => $val) {
-            if (!isset($variantData[$fieldName])) {
+            if (!isset($variantData[$fieldName]) && $fieldName !== 'specificationItemValues') {
                 $variantForm->remove($fieldName);
             }
         }
