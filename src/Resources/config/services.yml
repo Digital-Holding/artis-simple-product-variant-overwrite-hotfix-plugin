@@ -1,5 +1,7 @@
 services:
     dh.artis_simple_product_variant_hotfix_plugin.form.extension.product_type:
         class: DH\ArtisSimpleProductVariantOverwriteHotfixPlugin\Form\ProductTypeExtension
+        arguments:
+            - '@dh.artis.product.specification_item.specification_item_value_resolver'
         tags:
             - { name: form.type_extension }

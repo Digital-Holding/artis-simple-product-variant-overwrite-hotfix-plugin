@@ -6,7 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^7.3",
-        "sylius/sylius": "^1.6"
+        "sylius/sylius": "^1.6",
+        "digital-holding/artis-product-specification-item-bundle": "dev-main"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
