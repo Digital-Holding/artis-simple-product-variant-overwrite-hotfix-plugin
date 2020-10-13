@@ -13,6 +13,7 @@ use DH\Artis\Product\Specification\SpecificationItem\SpecificationItemValueResol
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use DH\Artis\Product\Specification\SpecificationItem\SpecificationItemValueType;
 
 class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterface
 {
@@ -57,6 +58,9 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
         {
             $code = $item->getSpecificationItemValueCode();
             $type = $item->getSpecificationItemValue()->getItem()->getType();
+            if (is_string($type)) {
+                $type = new SpecificationItemValueType($type);
+            }
             $val = $this->specificationItemValueResolver->getSpecificationItemValueByType($type, $item, true);
             $field = $this->specificationItemValueResolver->getSpecificationItemValueFieldByType($type, $item);
 
