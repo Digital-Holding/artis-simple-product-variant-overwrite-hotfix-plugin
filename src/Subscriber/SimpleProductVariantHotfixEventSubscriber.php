@@ -65,7 +65,7 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
             $field = $this->specificationItemValueResolver->getSpecificationItemValueFieldByType($type, $item);
 
             //special case for booleans
-            if (!isset($data['variant']['specificationItemValues'][$code]) && $val !== true) {
+            if (!isset($data['variant']['specificationItemValues'][$code]) && $val === true) {
                 $data['variant']['specificationItemValues'][$code] = [
                     $field => $val
                 ];
