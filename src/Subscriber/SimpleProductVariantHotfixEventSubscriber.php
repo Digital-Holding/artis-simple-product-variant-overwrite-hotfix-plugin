@@ -39,6 +39,14 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
 
         $variantForm = $event->getForm()->get('variant');
         $variantData = $data['variant'];
+
+        //special case for 3 fields hardcoded in sylius
+        foreach (['on_hand', 'tracked', 'version'] as $hardcodedEntry) {
+            if (!isset($variantData[$hardcodedEntry])) {
+                $variantData[$hardcodedEntry] = false;
+            }
+        }
+
         foreach ($variantForm->all() as $fieldName => $val) {
             if (!isset($variantData[$fieldName]) && $fieldName !== 'specificationItemValues') {
                 $variantForm->remove($fieldName);
@@ -48,8 +56,8 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
         //fix for specification item values
         /** @var ProductVariantInterface */
         $variant = $variantForm->getNormData();
-
-        if (!empty($variant->getSpecificationItemValues()) && !isset($data['variant']['specificationItemValues'])) {
+        $existing = $variant->getSpecificationItemValues(); //cannot use empty due to collection
+        if (count($existing) !== 0 && !isset($data['variant']['specificationItemValues'])) {
             $data['variant']['specificationItemValues'] = [];
         }
 
