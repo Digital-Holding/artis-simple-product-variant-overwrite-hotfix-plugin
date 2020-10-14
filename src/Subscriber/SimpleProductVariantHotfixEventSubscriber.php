@@ -14,6 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use DH\Artis\Product\Specification\SpecificationItem\SpecificationItemValueType;
+use PhpSpec\Specification;
 
 class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterface
 {
@@ -48,7 +49,7 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
         /** @var ProductVariantInterface */
         $variant = $variantForm->getNormData();
 
-        if (!isset($data['variant']['specificationItemValues'])) {
+        if (!empty($variant->getSpecificationItemValues()) && !isset($data['variant']['specificationItemValues'])) {
             $data['variant']['specificationItemValues'] = [];
         }
 
@@ -56,19 +57,26 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
         /** @var ProductVariantSpecificationItemValuesInterface */
         foreach ($variant->getSpecificationItemValues() as $item)
         {
-            $code = $item->getSpecificationItemValueCode();
             $type = $item->getSpecificationItemValue()->getItem()->getType();
             if (is_string($type)) {
                 $type = new SpecificationItemValueType($type);
             }
-            $val = $this->specificationItemValueResolver->getSpecificationItemValueByType($type, $item, true);
+
             $field = $this->specificationItemValueResolver->getSpecificationItemValueFieldByType($type, $item);
 
-            //special case for booleans
-            if (!isset($data['variant']['specificationItemValues'][$code])) {               
-                $data['variant']['specificationItemValues'][$code] = [
-                    $field => $val
-                ];
+            $code = $item->getSpecificationItemValueCode();
+            $itemId =  $item->getSpecificationItemValue()->getItem()->getId();
+            $val = $this->specificationItemValueResolver->getSpecificationItemValueByType($type, $item, true);
+
+            if ($code) {
+                //special case for booleans
+                if (!isset($data['variant']['specificationItemValues'][$code])) {
+                    $data['variant']['specificationItemValues'][$code] = [
+                        $field => $val,
+                    ];
+                }
+            } else {
+                $data['variant']['specificationItemValues'][] = [$field => $val];
             }
         }
 
