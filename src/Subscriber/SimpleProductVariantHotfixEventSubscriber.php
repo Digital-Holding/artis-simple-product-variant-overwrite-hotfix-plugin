@@ -37,6 +37,11 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
     {
         $data = $event->getData();
 
+        $product = $event->getForm()->getNormData();
+        if (!$product->isSimple()) {
+            return;
+        }
+
         $variantForm = $event->getForm()->get('variant');
         $variantData = $data['variant'];
 
