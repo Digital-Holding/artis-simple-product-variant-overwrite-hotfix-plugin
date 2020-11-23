@@ -18,7 +18,9 @@ final class ProductTypeExtension extends AbstractTypeExtension
     /** @var SpecificationItemValueResolverInterface */
     protected $specificationItemValueResolver;
 
-    public function __construct(SpecificationItemValueResolverInterface $specificationItemValueResolver)
+    protected $ignoredNodes;
+
+    public function __construct(SpecificationItemValueResolverInterface $specificationItemValueResolver, $ignoredNodes)
     {
         $this->specificationItemValueResolver = $specificationItemValueResolver;
     }
@@ -26,7 +28,7 @@ final class ProductTypeExtension extends AbstractTypeExtension
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->addEventSubscriber(new SimpleProductVariantHotfixEventSubscriber($this->specificationItemValueResolver));
+            ->addEventSubscriber(new SimpleProductVariantHotfixEventSubscriber($this->specificationItemValueResolver, $this->ignoredNodes));
     }
 
     public static function getExtendedTypes(): iterable

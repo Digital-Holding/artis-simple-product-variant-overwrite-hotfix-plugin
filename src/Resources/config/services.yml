@@ -3,5 +3,6 @@ services:
         class: DH\ArtisSimpleProductVariantOverwriteHotfixPlugin\Form\ProductTypeExtension
         arguments:
             - '@dh.artis.product.specification_item.specification_item_value_resolver'
+            - '%ignored_nodes%'
         tags:
             - { name: form.type_extension }

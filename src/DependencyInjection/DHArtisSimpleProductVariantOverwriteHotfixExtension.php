@@ -16,8 +16,8 @@ final class DHArtisSimpleProductVariantOverwriteHotfixExtension extends Extensio
     {
         $config = $this->processConfiguration($this->getConfiguration([], $container), $config);
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-
         $loader->load('services.yml');
+        $container->setParameter('ignored_nodes', $config['ignored_nodes']);
     }
 
     public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface

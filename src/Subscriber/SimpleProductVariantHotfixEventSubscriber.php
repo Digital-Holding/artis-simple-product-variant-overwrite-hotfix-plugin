@@ -21,10 +21,37 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
     /** @var SpecificationItemValueResolverInterface */
     protected $specificationItemValueResolver;
 
-    public function __construct(SpecificationItemValueResolverInterface $specificationItemValueResolver)
+    /**
+     * @todo currently not in use
+     * @var array */
+    protected $ignoredProductNodes;
+
+    /** @var array */
+    protected $ignoredVariantNodes;
+
+    public function __construct(SpecificationItemValueResolverInterface $specificationItemValueResolver, $ignoredNodes)
     {
         $this->specificationItemValueResolver = $specificationItemValueResolver;
+        list($this->ignoredProductNodes, $this->ignoredVariantNodes) = $this->parseIgnoredNodes($ignoredNodes);
     }
+
+    protected function parseIgnoredNodes($ignoredNodes)
+    {
+        $this->ignoredProductNodes = [];
+        $this->ignoredVariantNodes = [
+            'specificationItemValues' // special case
+        ];
+
+        foreach ($ignoredNodes as $ignoredNode) {
+            $partial = substr($ignoredNode, 0, 10);
+            if ($partial === "variant.") {
+                $this->ignoredVariantNodes[] = $partial;
+            } else {
+                $this->ignoredProductNodes[] = $ignoredNode;
+            }
+        }
+    }
+
 
     public static function getSubscribedEvents(): array
     {
@@ -53,7 +80,7 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
         }
 
         foreach ($variantForm->all() as $fieldName => $val) {
-            if (!isset($variantData[$fieldName]) && $fieldName !== 'specificationItemValues') {
+            if (!isset($variantData[$fieldName]) && !in_array($fieldName, $this->ignoredVariantNodes)) {
                 $variantForm->remove($fieldName);
             }
         }
@@ -66,10 +93,8 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
             $data['variant']['specificationItemValues'] = [];
         }
 
-
         /** @var ProductVariantSpecificationItemValuesInterface */
-        foreach ($variant->getSpecificationItemValues() as $item)
-        {
+        foreach ($variant->getSpecificationItemValues() as $item) {
             $type = $item->getSpecificationItemValue()->getItem()->getType();
             if (is_string($type)) {
                 $type = new SpecificationItemValueType($type);
