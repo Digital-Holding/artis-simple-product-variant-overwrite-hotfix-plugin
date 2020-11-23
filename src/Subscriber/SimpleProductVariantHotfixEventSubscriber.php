@@ -32,7 +32,7 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
     public function __construct(SpecificationItemValueResolverInterface $specificationItemValueResolver, $ignoredNodes)
     {
         $this->specificationItemValueResolver = $specificationItemValueResolver;
-        list($this->ignoredProductNodes, $this->ignoredVariantNodes) = $this->parseIgnoredNodes($ignoredNodes);
+        $this->parseIgnoredNodes($ignoredNodes);
     }
 
     protected function parseIgnoredNodes($ignoredNodes)
@@ -43,9 +43,9 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
         ];
 
         foreach ($ignoredNodes as $ignoredNode) {
-            $partial = substr($ignoredNode, 0, 10);
+            $partial = substr($ignoredNode, 0, 8);
             if ($partial === "variant.") {
-                $this->ignoredVariantNodes[] = $partial;
+                $this->ignoredVariantNodes[] = substr($ignoredNode, 8);
             } else {
                 $this->ignoredProductNodes[] = $ignoredNode;
             }
@@ -78,6 +78,7 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
                 $variantData[$hardcodedEntry] = false;
             }
         }
+
 
         foreach ($variantForm->all() as $fieldName => $val) {
             if (!isset($variantData[$fieldName]) && !in_array($fieldName, $this->ignoredVariantNodes)) {

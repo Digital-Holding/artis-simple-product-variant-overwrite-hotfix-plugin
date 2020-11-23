@@ -23,6 +23,7 @@ final class ProductTypeExtension extends AbstractTypeExtension
     public function __construct(SpecificationItemValueResolverInterface $specificationItemValueResolver, $ignoredNodes)
     {
         $this->specificationItemValueResolver = $specificationItemValueResolver;
+        $this->ignoredNodes = $ignoredNodes;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
