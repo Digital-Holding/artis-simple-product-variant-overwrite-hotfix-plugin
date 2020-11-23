@@ -23,7 +23,7 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
             ->arrayNode('ignored_nodes')
-            ->defaultValue(null)
+            ->prototype('scalar')->end()
             ->end()
             ->end()
             ->end();
