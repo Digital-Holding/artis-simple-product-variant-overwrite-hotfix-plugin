@@ -39,7 +39,7 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
     {
         $this->ignoredProductNodes = [];
         $this->ignoredVariantNodes = [
-            'specificationItemValues' // special case
+            //    'specificationItemValues' // special case
         ];
 
         foreach ($ignoredNodes as $ignoredNode) {
@@ -86,38 +86,38 @@ class SimpleProductVariantHotfixEventSubscriber implements EventSubscriberInterf
             }
         }
 
-        //fix for specification item values
-        /** @var ProductVariantInterface */
-        $variant = $variantForm->getNormData();
-        $existing = $variant->getSpecificationItemValues(); //cannot use empty due to collection
-        if (count($existing) !== 0 && !isset($data['variant']['specificationItemValues'])) {
-            $data['variant']['specificationItemValues'] = [];
-        }
+        // //fix for specification item values
+        // /** @var ProductVariantInterface */
+        // $variant = $variantForm->getNormData();
+        // $existing = $variant->getSpecificationItemValues(); //cannot use empty due to collection
+        // if (count($existing) !== 0 && !isset($data['variant']['specificationItemValues'])) {
+        //     $data['variant']['specificationItemValues'] = [];
 
-        /** @var ProductVariantSpecificationItemValuesInterface */
-        foreach ($variant->getSpecificationItemValues() as $item) {
-            $type = $item->getSpecificationItemValue()->getItem()->getType();
-            if (is_string($type)) {
-                $type = new SpecificationItemValueType($type);
-            }
+        //     /** @var ProductVariantSpecificationItemValuesInterface */
+        //     foreach ($variant->getSpecificationItemValues() as $item) {
+        //         $type = $item->getSpecificationItemValue()->getItem()->getType();
+        //         if (is_string($type)) {
+        //             $type = new SpecificationItemValueType($type);
+        //         }
 
-            $field = $this->specificationItemValueResolver->getSpecificationItemValueFieldByType($type, $item);
+        //         $field = $this->specificationItemValueResolver->getSpecificationItemValueFieldByType($type, $item);
 
-            $code = $item->getSpecificationItemValueCode();
-            $itemId =  $item->getSpecificationItemValue()->getItem()->getId();
-            $val = $this->specificationItemValueResolver->getSpecificationItemValueByType($type, $item, true);
+        //         $code = $item->getSpecificationItemValueCode();
+        //         $itemId =  $item->getSpecificationItemValue()->getItem()->getId();
+        //         $val = $this->specificationItemValueResolver->getSpecificationItemValueByType($type, $item, true);
 
-            if ($code) {
-                //special case for booleans
-                if (!isset($data['variant']['specificationItemValues'][$code])) {
-                    $data['variant']['specificationItemValues'][$code] = [
-                        $field => $val,
-                    ];
-                }
-            } else {
-                $data['variant']['specificationItemValues'][] = [$field => $val];
-            }
-        }
+        //         if ($code) {
+        //             //special case for booleans
+        //             if (!isset($data['variant']['specificationItemValues'][$code])) {
+        //                 $data['variant']['specificationItemValues'][$code] = [
+        //                     $field => $val,
+        //                 ];
+        //             }
+        //         } else {
+        //             $data['variant']['specificationItemValues'][] = [$field => $val];
+        //         }
+        //     }
+        // }
 
         $event->setData($data);
     }
